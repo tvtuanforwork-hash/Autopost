@@ -1,0 +1,14 @@
+AutoPost Personal V1.1 CLOUD/QR - TEST REPORT (2026-10-15)
+
+- Baseline: AutoPost_Personal_V1_WEB_SERVER_EXTENSION_SOURCE.zip / mounted source
+- Regression policy: all original files outside the update whitelist preserved byte-identically.
+- Updated original files: setup.py, README.md, web/dashboard.js, web/styles.css, web/index.html, server/main.py
+- Unchanged original source files checked: 14
+- `python -m pytest -q tests` : 4 PASSED
+- `node --check` on worker, dashboard and extension: PASSED
+- `python -m compileall -q server` : PASSED
+- Compose YAML structure parsed: PASSED
+- Runtime Docker/Oracle deployment: NOT TESTED (Docker unavailable in this environment)
+- Real Zalo QR & group events: NOT TESTED (no live Zalo account/Cloud access)
+- Real Shopee Affiliate conversion & media forwarding: NOT IMPLEMENTED / NOT TESTED
+- Default sending disabled; rule starts disabled; unconverted Shopee jobs blocked.

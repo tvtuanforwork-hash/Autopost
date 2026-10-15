@@ -1,0 +1,14 @@
+{
+  "name": "autopost-personal-cf-v12",
+  "private": true,
+  "version": "1.2.0",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:local": "wrangler d1 migrations apply autopost_personal --local",
+    "db:remote": "wrangler d1 migrations apply autopost_personal --remote",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "devDependencies": {"wrangler": "^4.0.0"}
+}

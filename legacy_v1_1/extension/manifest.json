@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "AutoPost Personal Bridge V1",
+  "version": "1.0.0",
+  "description": "Cầu nối API Key giữa Web AutoPost cá nhân và trình duyệt. Không đọc Zalo hoặc Shopee ở V1.",
+  "permissions": ["storage", "alarms"],
+  "optional_host_permissions": ["https://*/*", "http://localhost/*", "http://127.0.0.1/*"],
+  "background": {"service_worker": "background.js"},
+  "action": {"default_popup": "popup.html"}
+}

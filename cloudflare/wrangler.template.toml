@@ -1,0 +1,16 @@
+name = "autopost-personal-v12"
+main = "src/index.js"
+compatibility_date = "2026-10-15"
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+run_worker_first = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "autopost_personal"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+
+[vars]
+ENABLE_ZALO_SENDING = "0"

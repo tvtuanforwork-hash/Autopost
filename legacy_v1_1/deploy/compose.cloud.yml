@@ -1,0 +1,53 @@
+# Run from root: docker compose -f deploy/compose.cloud.yml up -d --build
+# Enable experimental Zalo worker explicitly:
+# docker compose -f deploy/compose.cloud.yml --profile zalo up -d --build
+services:
+  autopost:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    restart: unless-stopped
+    env_file: ../.env
+    volumes:
+      - ../data:/app/data
+    networks: [private]
+    expose: ['8000']
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=5)"]
+      interval: 30s
+      timeout: 8s
+      retries: 3
+  caddy:
+    image: caddy:2.11-alpine
+    restart: unless-stopped
+    depends_on: [autopost]
+    ports:
+      - '80:80'
+      - '443:443'
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN:?Set APP_DOMAIN in root .env to your own domain first}
+    volumes:
+      - ./caddy:/etc/caddy:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks: [private]
+  zalo-worker:
+    profiles: ['zalo']
+    build:
+      context: ../zalo-worker
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on: [autopost]
+    env_file: ../.env
+    environment:
+      APP_DATA_DIR: /app/data
+    volumes:
+      - ../data:/app/data
+    networks: [private]
+    security_opt: ['no-new-privileges:true']
+    init: true
+networks:
+  private:
+volumes:
+  caddy_data:
+  caddy_config:

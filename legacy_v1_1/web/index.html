@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>AutoPost Personal · V1</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <script defer src="/dashboard.js"></script>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand"><span class="logo">A</span><div><strong>AutoPost</strong><small>PERSONAL / V1.1 CLOUD</small></div></div>
+      <nav><span class="active">▦ &nbsp; Tổng quan</span><span class="muted">◇ &nbsp; Zalo Reader <em>Cloud thử nghiệm</em></span><span class="muted">↗ &nbsp; Shopee Converter <em>Chưa nối</em></span><span class="muted">➤ &nbsp; Zalo Sender <em>Giữ mặc định TẮT</em></span></nav>
+      <div class="side-note">Phiên bản cá nhân<br><small>Không lưu cookie Zalo/Shopee lên Web.</small></div>
+    </aside>
+    <main class="main">
+      <header class="top"><div><p class="eyebrow">TRUNG TÂM ĐIỀU KHIỂN</p><h1>AutoPost Personal</h1><p class="subtitle">Web + API Key + Extension + Zalo Worker trên Server</p></div><div class="top-right"><span class="status" id="serverStatus">● Đang kiểm tra Server</span><button id="refreshButton" class="secondary">↻ Làm mới</button></div></header>
+      <section class="stats">
+        <article class="stat"><small>Server</small><strong id="serverCard">—</strong><span>SQLite · API Server</span></article>
+        <article class="stat"><small>Extension Bridge</small><strong id="bridgeCard">—</strong><span id="bridgeSeen">Chưa nhận heartbeat</span></article>
+        <article class="stat"><small>Chờ xử lý</small><strong id="queuedCount">0</strong><span>Job đang đợi</span></article>
+        <article class="stat"><small>Đã hoàn thành</small><strong id="doneCount">0</strong><span>Bài test kết nối</span></article>
+      </section>
+      <section class="columns">
+        <article class="panel connect"><div class="section-header"><div><h2>01 · Kết nối Extension</h2><p>Extension xác thực với Server bằng API Key</p></div><span class="chip" id="bridgeStatus">Chưa kết nối</span></div>
+          <div class="instructions"><div class="step"><span>1</span><p>Chạy <code>python setup.py</code> trên server để tạo API Key.</p></div><div class="step"><span>2</span><p>Cài extension từ thư mục <code>extension/</code> trên trình duyệt.</p></div><div class="step"><span>3</span><p>Nhập địa chỉ Server HTTPS và API Key vào Popup của extension, bấm <b>Kết nối</b>.</p></div></div>
+          <p class="hint">API Key không xuất hiện trong mã HTML. Web chỉ hiển thị trạng thái kết nối, không lấy cookie trình duyệt.</p>
+        </article>
+        <article class="panel"><div class="section-header"><div><h2>02 · Kiểm thử luồng công việc</h2><p>Gửi Job thật từ Web sang Extension</p></div><span class="chip neutral">Kiểm thử</span></div>
+          <button class="primary" id="pingButton">Gửi Job kiểm tra kết nối</button>
+          <label for="linkInput">Thử chuyển link (chưa tích hợp Shopee)</label>
+          <textarea id="linkInput" placeholder="https://s.shopee.vn/...
+Mỗi dòng một URL" rows="3"></textarea>
+          <button class="secondary full" id="convertButton">Gửi Job kiểm thử convert_links</button>
+          <p class="hint">Job <code>ping</code> phản hồi thành công. Job <code>convert_links</code> được Extension nhận nhưng trả về <b>Chưa hỗ trợ</b>, không tạo link giả.</p>
+          <p id="submitMessage" role="status" class="feedback"></p>
+        </article>
+      </section>
+      <section class="panel" id="zaloPanel">
+        <div class="section-header"><div><h2>03 · Zalo Cloud · QR &amp; Nhóm</h2><p>Module thử nghiệm trên server; không can thiệp Zalo PC</p></div><span class="chip" id="zaloState">Chưa chạy</span></div>
+        <p class="hint" id="zaloNote">Muốn chạy thử cần bật profile Zalo trên Cloud. QR chỉ hiển thị sau khi worker khởi động.</p>
+        <div class="qr-area"><img id="zaloQR" alt="Mã QR Zalo từ Cloud" hidden/><span id="noQR" class="hint">Chưa có mã QR hoặc đã đăng nhập.</span></div>
+        <button class="secondary" id="reloadQR">↻ Tải lại mã QR</button>
+        <p class="hint">Phiên Zalo được mã hóa AES-256-GCM trên server; không nhập cookie vào Dashboard.</p>
+      </section>
+      <section class="panel">
+        <div class="section-header"><div><h2>04 · Quy tắc Forwarding</h2><p>Chọn nhóm nguồn → nhóm đích. Tạo rule mặc định TẮT, chỉ bật khi bạn đồng ý.</p></div></div>
+        <div class="rule-fields">
+          <label>Nhóm nguồn<select id="ruleSource"><option value="">Chọn nhóm nguồn</option></select></label>
+          <label>Nhóm đích<select id="ruleDestination"><option value="">Chọn nhóm đích</option></select></label>
+          <label class="tick"><input type="checkbox" id="ruleOnlyShopee" checked/> Chỉ nhận bài chứa link Shopee</label>
+          <label class="tick"><input type="checkbox" id="ruleBlockExternal" checked/> Chặn nếu có link ngoài Shopee</label>
+          <button class="primary" id="addRule">+ Tạo quy tắc (mặc định TẮT)</button>
+        </div>
+        <p id="ruleMessage" class="feedback"></p>
+        <div class="table-scroll"><table><thead><tr><th>Nguồn</th><th>Đích</th><th>Bộ lọc</th><th>Hoạt động</th><th>Quản lý</th></tr></thead><tbody id="rulesBody"></tbody></table></div>
+        <p class="hint">Chỉ gửi nội dung văn bản trong bản thử nghiệm. Tin có link Shopee được giữ lại đến khi Converter thật trả link mới; không gửi link gốc.</p>
+      </section>
+      <section class="panel">
+        <div class="section-header"><div><h2>05 · Hàng đợi Zalo</h2><p>Thành công nghĩa là API gửi chấp nhận, không thay thế kiểm chứng tin thực tế.</p></div><span class="chip neutral" id="zaloQueueCount">0</span></div>
+        <div class="table-scroll"><table><thead><tr><th>Nhóm đích</th><th>Trạng thái</th><th>Thời gian</th><th>Thông báo</th></tr></thead><tbody id="deliveriesBody"></tbody></table></div>
+      </section>
+      <section class="panel history"><div class="section-header"><div><h2>06 · Hàng đợi &amp; lịch sử</h2><p>Mọi công việc được ghi vào SQLite</p></div><span class="chip neutral" id="totalCount">0 Job</span></div><div class="table-scroll"><table><thead><tr><th>Job ID</th><th>Loại</th><th>Trạng thái</th><th>Số lần nhận</th><th>Thời gian</th><th>Chi tiết</th></tr></thead><tbody id="jobsBody"><tr><td colspan="6" class="empty">Chưa có công việc</td></tr></tbody></table></div></section>
+      <footer>AutoPost Personal V1.1 · Zalo thử nghiệm, mặc định không gửi · Shopee Converter chưa tích hợp extension thực tế.</footer>
+    </main>
+  </div>
+</body>
+</html>

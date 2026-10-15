@@ -1,0 +1,24 @@
+AutoPost Personal V1.2 — 2026-10-15
+====================================
+Mục tiêu cập nhật: chạy CÙNG LÚC Cloudflare + Enzonic Free.
+
+ĐÃ CÓ:
+- Cloudflare Workers: Web Dashboard HTTPS + API HTTP Basic authentication.
+- Cloudflare D1: jobs, extension heartbeats, Enzonic heartbeats, nhóm/rules, hàng đợi/nhật ký.
+- Enzonic Python outbound bridge (gọi HTTPS lên Cloudflare không cần HTTPS inbound Enzonic).
+- Job claim lease 120s; token chống complete sai; ping Extension V1.1 tương thích.
+- Shopee conversion phải đủ tất cả URL mới gỡ chặn; lỗi -> conversion_blocked.
+- Zalo forwarding rule mặc định TẮT; gửi mặc định TẮT.
+- Trạng thái awaiting_verification, API chỉ cho verify >=60 giây sau gửi.
+- Legacy V1.1 được giữ byte-for-byte.
+
+CHƯA CÓ:
+- Không có QR Zalo thật chạy trên Enzonic (gói Python 512MB).
+- Không có Shopee Affiliate converter thật; không chuyển session thật.
+- Không có gửi tin/ảnh/video Zalo thật hoặc verifier đọc lại sau 60 giây.
+- Không có chứng nhận chạy 24/7 trên hosting free; Enzonic có thể ngủ/dừng.
+
+TEST:
+- Node syntax, JS unit 7/7 PASS; migration SQL syntax PASS;
+- Python bridge py_compile PASS; legacy diff SHA256 = 0 file sai.
+- Chưa được deploy thử trên Cloudflare/Enzonic tài khoản của người dùng.

@@ -1,0 +1,4 @@
+{
+  "cloudflare_url": "https://autopost-personal-v12.YOUR_SUBDOMAIN.workers.dev",
+  "bridge_api_key": "REPLACE_WITH_NEW_CLOUDFLARE_BRIDGE_API_KEY"
+}
